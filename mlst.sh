@@ -43,7 +43,7 @@ echo "Reading the results in blast/*.blast.out" >& $logfile
     echo $asm;
     for i in $allele; do
       blastfile=blast/"$asm"_"$i".blast.out
-      sort -k 12 -n -r $blastfile|head -1
+      sort -k 12 -n -r $blastfile|head -1 || echo "-"
     done;
   ) | perl -lae 'my $score=0; $asm=<>; print $asm;for(<>){@F=split/\t/;$score+=$F[11];print "$F[1]";}print $score' | xargs echo
 done) | sort -k 9 -n
