@@ -3,13 +3,14 @@
 # parameters
 logfile="/dev/stderr"
 allele="abcZ bglA cat dapE dat ldh lhkA"
+URL="http://www.pasteur.fr/cgi-bin/genopole/PF8/mlstdbnet.pl?page=alleles&format=FASTA&file=Lmono_profiles.xml&locus="
 
 # Don't edit below here
 #####################################
 echo "Updating databases" >& $logfile
 cd db;
 if [ $? -gt 0 ]; then echo "ERROR: You need to run this from the main MLST directory; not from a subdirectory"; exit 1; fi;
-(for i in $allele; do wget 'http://www.pasteur.fr/cgi-bin/genopole/PF8/mlstdbnet.pl?page=alleles&format=FASTA&locus='$i'&file=Lmono_profiles.xml' -O db/$i.fasta; legacy_blast.pl formatdb -i db/$i.fasta -p F; done;) >& $logfile
+(for i in $allele; do wget "$URL$i" -O db/$i.fasta; legacy_blast.pl formatdb -i db/$i.fasta -p F; done;) >& $logfile
 cd -;
 
 
@@ -48,3 +49,4 @@ echo "Reading the results in blast/*.blast.out" >& $logfile
   ) | perl -lae 'my $score=0; $asm=<>; print $asm;for(<>){@F=split/\t/;$score+=$F[11];print "$F[1]";}print $score' | xargs echo
 done) | sort -k 9 -n
 
+echo "DONE!";
