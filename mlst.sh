@@ -49,11 +49,11 @@ jobsRunning=0;
   echo "Blasting $asm" >> $logfile
   for i in $allele; do
     if [ -e blast/"$asm"_"$i".blast.out ]; then
-      echo blast/"$asm"_"$i".blast.out is already present. Skipping. >> $logfile
+      echo "blast/"$asm"_"$i".blast.out is already present. Skipping." >> $logfile
       continue;
     fi;
     # make the blast output file
-    legacy_blast.pl blastall -p blastn -F F -d db/$i.fasta -i assemblies/$asm.fasta -m 8 -a 1 2>blast/"$asm"_"$i".blast.err 1>blast/"$asm"_"$i".blast.out.tmp
+    legacy_blast.pl blastall -p blastn -F F -d db/$i.fasta -i assemblies/$asm.fasta -m 8 -a 1 | sort -k12,12nr | head -n 1 2>blast/"$asm"_"$i".blast.err 1>blast/"$asm"_"$i".blast.out.tmp
     if [ $? -gt 0 ]; then echo "ERROR: PROBLEM WITH BLASTn" >> $logfile; exit 1; fi;
     mv blast/"$asm"_"$i".blast.out.tmp blast/"$asm"_"$i".blast.out >> $logfile 2>&1
     if [ $? -gt 0 ]; then exit 1; fi;
