@@ -1,6 +1,7 @@
 #!/bin/sh
 #$ -cwd -V
 #$ -S /bin/sh
+#$ -N mlst.sh
 
 ##############################################
 # Parameters. Qsub parameters are intertwined, so edit both parameters at once.
@@ -24,8 +25,8 @@ URL="http://www.pasteur.fr/cgi-bin/genopole/PF8/mlstdbnet.pl?page=alleles&format
 # Don't edit below here
 #####################################
 echo "Updating databases" >> $logfile
-cd db;
-if [ $? -gt 0 ]; then echo "ERROR: You need to run this from the main MLST directory; not from a subdirectory"; exit 1; fi;
+cd db >> /dev/null 2>&1;
+if [ $? -gt 0 ]; then echo "ERROR: You need to run this from the main MLST directory; not from a subdirectory" >> $logfile; exit 1; fi;
 (for i in $allele; do 
   if [ -e "db/$i.fasta.nin" ]; then
     continue;
@@ -37,8 +38,8 @@ cd -;
 
 
 echo "Performing BLASTn" >> $logfile
-ls assemblies/*.fasta >& /dev/null
-if [ $? -gt 0 ]; then echo "ERROR: There is no assemblies/ directory with fasta files!"; exit 1; fi;
+ls assemblies/*.fasta >> /dev/null 2>&1
+if [ $? -gt 0 ]; then echo "ERROR: There is no assemblies/ directory with fasta files!" >> $logfile; exit 1; fi;
 jobsRunning=0;
 ( for asm in assemblies/*.fasta; do
 
@@ -89,4 +90,4 @@ echo "Reading the results in blast/*.blast.out" >> $logfile
   ) | perl -lae 'my $score=0; $asm=<>; print $asm;for(<>){@F=split/\t/;$score+=$F[11];print "$F[1]";}print $score' | xargs echo
 done) | sort -k 9 -n
 
-echo "DONE!";
+echo "DONE!" >> $logfile;
