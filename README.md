@@ -36,4 +36,4 @@ The output is a tab-separated-values (tsv) file with the following fields:
 
     assemblyName  locus1  locus2 ... locusX  combinedBlastScore
 
-Those with a lower combined blast score do not have 100% identity and coverage and should be examined more closely.  The maximum combined score is hopefully obvious from the majority of your results and will vary with each MLST scheme.  At this time the ST column is not present; hopefully it can be filled in, with a future version of the script.
+Those with a lower combined blast score do not have 100% identity and coverage and should be examined more closely.  Those with perfect scores are confidently typed (100% identity and coverage).  The maximum combined score is hopefully obvious from the majority of your results and will vary with each MLST scheme.  At this time the ST column is not present; hopefully it can be filled in, with a future version of the script.
