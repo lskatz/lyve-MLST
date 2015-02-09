@@ -10,7 +10,7 @@
 ## output file is stdout, so be sure to use -o if using qsub
 
 script=`basename $0`;
-#$ -e mlst.sh.err 
+#$ -e mlst.sh.err
 logfile="mlst.sh.err"
 #$ -pe smp 12
 NUMCPUS=12
@@ -27,12 +27,12 @@ URL="http://www.pasteur.fr/cgi-bin/genopole/PF8/mlstdbnet.pl?page=alleles&format
 echo "Updating databases" >> $logfile
 cd db >> /dev/null 2>&1;
 if [ $? -gt 0 ]; then echo "ERROR: You need to run this from the main MLST directory; not from a subdirectory" >> $logfile; exit 1; fi;
-(for i in $allele; do 
-  if [ -e "db/$i.fasta.nin" ]; then
+(for i in $allele; do
+  if [ -e "$i.fasta.nin" ]; then
     continue;
   fi;
-  wget "$URL$i" -O db/$i.fasta; 
-  legacy_blast.pl formatdb -i db/$i.fasta -p F; 
+  wget "$URL$i" -O $i.fasta;
+  legacy_blast.pl formatdb -i $i.fasta -p F;
 done;) >> $logfile 2>&1
 cd -;
 
@@ -58,7 +58,7 @@ jobsRunning=0;
     mv blast/"$asm"_"$i".blast.out.tmp blast/"$asm"_"$i".blast.out >> $logfile 2>&1
     if [ $? -gt 0 ]; then exit 1; fi;
   done;
-  ) &
+  )
   if [ $? -gt 0 ]; then exit 1; fi;
 
   # job control
